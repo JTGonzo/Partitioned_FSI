@@ -1,11 +1,20 @@
-function [MESH, d_Fn_t, ALE_velocity] = movemesh(MESH, Fluid_ReferenceNodes, Solid_Extension, TimeAdvanceS, uS, d_Fn, dim, dt, nLiter)
+function [MESH, d_Fn_t, ALE_velocity] = movemesh(MESH, Fluid_ReferenceNodes, Solid_Extension, TimeAdvanceS, uS, d_Fn, dim, dt, nLiter, ALE_velocity, Couple)
     % first iteration of time step the mesh has not additionally deformed
-    if nLiter == 1     
-        u_gamma= [];    
-        duS = TimeAdvanceS.velocity(uS); % apply interface velocity  
+    if (nLiter == 1) && (Couple.extra == 1)     
+        u_gamma= [];         
+        duS = TimeAdvanceS.velocityNL1( ); % apply interface velocity  
         for k = 1 : MESH.Solid.dim
+            u_inc = zeros(MESH.ndof_interface{k},1);
             tmp  = duS(MESH.Solid.numNodes*(k-1)+MESH.Solid.dof_interface{k});
-            u_gamma = [u_gamma; tmp(MESH.Interface_SFmap{k})];
+            if MESH.mapper == 1
+                u_inc =  tmp(MESH.Interface_SFmap{k});
+            else
+                for i = 1:length(MESH.coeff_SFmap{k}(1,:))
+                    u_add = MESH.coeff_SFmap{k}(:,i).*tmp(MESH.Interface_SFmap{k}(:,i));
+                    u_inc = u_inc + u_add;
+                end
+            end
+            u_gamma = [u_gamma; u_inc];
         end
         ALE_velocity(MESH.Fluid.Gamma_global) = u_gamma;
         d_Fn_t = d_Fn;
@@ -24,11 +33,23 @@ function [MESH, d_Fn_t, ALE_velocity] = movemesh(MESH, Fluid_ReferenceNodes, Sol
         ALE_velocity  =  1/dt * ( d_F - d_Fn );
         
         % Set the ALE mesh velocity at the interface (solid boundary vel)
+        u_gamma = [];
+        
         duS = TimeAdvanceS.velocity(uS);      
         for k = 1 : MESH.Solid.dim
+            u_inc = zeros(MESH.ndof_interface{k},1);
             tmp  = duS(MESH.Solid.numNodes*(k-1)+MESH.Solid.dof_interface{k});
-            ALE_velocity(MESH.Fluid.numNodes*(k-1)+MESH.Fluid.dof_interface{k}) = tmp(MESH.Interface_SFmap{k});
+            if MESH.mapper == 1
+                u_inc =  tmp(MESH.Interface_SFmap{k});
+            else
+                for i = 1:length(MESH.coeff_SFmap{k}(1,:))
+                    u_add = MESH.coeff_SFmap{k}(:,i).*tmp(MESH.Interface_SFmap{k}(:,i));
+                    u_inc = u_inc + u_add;
+                end
+            end
+            u_gamma = [u_gamma; u_inc];
         end
+        ALE_velocity(MESH.Fluid.Gamma_global) = u_gamma;
         
         % output mesh displacement array 
         d_Fn_t          =  d_F;

@@ -1,11 +1,10 @@
-function [cSF, cFS] = lin_interp_3D(nodesS, nodesF, interfaceS_dofs, interfaceF_dofs, id_SF, id_FS, k) 
+function [cSF, cFS] = lin_interp(nodesS, nodesF, interfaceS_dofs, interfaceF_dofs, id_SF, id_FS, k) 
 
     cSF = zeros(length(interfaceS_dofs{k}),2);
 	for i = 1 : length(interfaceS_dofs{k})
 		P0 = nodesS(:,interfaceS_dofs{k}(i));
 		P1 = nodesF(:,interfaceF_dofs{k}(id_SF{k}(i,1)));
 		P2 = nodesF(:,interfaceF_dofs{k}(id_SF{k}(i,2)));
-        P3 = nodesF(:,interfaceF_dofs{k}(id_SF{k}(i,2)));
 
 		Vn = P1 - P0;
 		Vt = (P2 - P1)/norm(P2 - P1);

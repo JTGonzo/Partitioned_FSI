@@ -1,4 +1,4 @@
-function [A_in, F_in, u_D, u_gamma] =  CFD_ApplyBC(A, F, FE_SPACE, FE_SPACE_p, MESH, DATA, t, TimeAdvanceS, uS, zero_Dirichlet)
+function [A_in, F_in, u_D, u_gamma] =  CFD_ApplyBC(A, F, FE_SPACE, FE_SPACE_p, MESH, DATA, t, TimeAdvanceS, uS, Couple, nLiter, zero_Dirichlet)
 %% Initialize some function parameters
 if nargin < 7
     t = [];
@@ -12,7 +12,7 @@ if isempty(F)
     F = sparse(FE_SPACE.numDof + FE_SPACE_p.numDof, 1);
 end
 
-if nargin < 10
+if nargin < 12
     zero_Dirichlet = 0;
 end
 
@@ -55,8 +55,7 @@ for k = 1 : MESH.Fluid.dim
             y    =  MESH.Fluid.vertices(2,MESH.Fluid.boundaries(1:2, MESH.Fluid.Pressure_side{k}));    
             side_length = sqrt((x(2:2:end)-x(1:2:end-1)).^2+(y(2:2:end)-y(1:2:end-1)).^2);
             
-            % compute the boundary element pressure force acting on
-            % the face normal
+            % compute the boundary element pressure force acting on the face normal
             for l = 1 : nof
                 face = MESH.Fluid.Pressure_side{k}(l);
                     
@@ -66,7 +65,7 @@ for k = 1 : MESH.Fluid.dim
                  Rrows(1+(l-1)*nbn:l*nbn) = MESH.Fluid.boundaries(1:nbn,face);
                  Rcoef(1+(l-1)*nbn:l*nbn) = MESH.Fluid.Normal_Faces(k,face)*side_length(l)*phi*pressure_loc;
             end
-             %  sparse vector of boundary pressure forces
+            %  sparse vector of boundary pressure forces
                 F = F + sparse(Rrows+(k-1)*MESH.Fluid.numNodes,1,Rcoef,FE_SPACE.numDof + FE_SPACE_p.numDof,1);                
         end
 end
@@ -83,11 +82,25 @@ end
 % either a zero or non-zero enforced condition
 u_D  = u_D * (1 - zero_Dirichlet);
 
-% extract the solid interface velocity  
-duS = TimeAdvanceS.velocity(uS);
+% extract the solid interface velocity
+if (nLiter == 1) && (Couple.extra == 1) 
+    duS = TimeAdvanceS.velocityNL1( );
+else
+    duS = TimeAdvanceS.velocity(uS);
+end
+
 for k = 1 : MESH.Fluid.dim
+    u_inc = zeros(MESH.ndof_interface{k},1);
     tmp  = duS(MESH.Solid.numNodes*(k-1)+MESH.Solid.dof_interface{k});
-    u_gamma = [u_gamma; tmp(MESH.Interface_SFmap{k})];
+    if MESH.mapper == 1
+            u_inc =  tmp(MESH.Interface_SFmap{k});
+    else
+        for i = 1:length(MESH.coeff_SFmap{k}(1,:))
+            u_add = MESH.coeff_SFmap{k}(:,i).*tmp(MESH.Interface_SFmap{k}(:,i));
+            u_inc = u_inc + u_add;           
+        end
+    end
+    u_gamma = [u_gamma; u_inc];
 end
 
 % boundary and interface Dirichlet conditions

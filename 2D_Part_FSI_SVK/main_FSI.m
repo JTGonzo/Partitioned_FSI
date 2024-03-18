@@ -68,7 +68,7 @@ while ( t < tf )
         
         uF_l = uF;
         % solve the Navier-Stokes equations (whatever formulation)
-        [uF, C_NS, F_NS, trac] =  solve_fluid(MESH, DATA, FE_SPACE_v, FE_SPACE_p, TimeAdvanceF, TimeAdvanceS, t, dt, ALE_velocity, uS);
+        [uF, C_NS, F_NS, trac] =  solve_fluid(MESH, DATA, FE_SPACE_v, FE_SPACE_p, TimeAdvanceF, TimeAdvanceS, t, dt, ALE_velocity, uS, Couple, nLiter);
         
         % solve the solid elasticity equations (whatever formulation/constitutive model)
         [uS_t] = solve_solid(FE_SPACE_s, FE_SPACE_v, MESH, DATA, SolidModel, TimeAdvanceS, uS_n, t, Coef_Mass, M_s, A_robin, trac);   

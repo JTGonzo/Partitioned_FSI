@@ -60,14 +60,14 @@ while ( t < tf )
         
         %clear MESH.Fluid.vertices MESH.Fluid.nodes MESH.Fluid.jac MESH.Fluid.invjac MESH.Fluid.h
         % move the ALE mesh per the solid displacement and compute the ALE velocity
-        if nLiter > 1     
-            [MESH, d_Fn_t, ALE_velocity] = movemesh(MESH, Fluid_ReferenceNodes, Solid_Extension, TimeAdvanceS, uS, d_Fn, dim, dt, nLiter);
+        if (nLiter == 1) && (Couple.extra == 1)     
+             [~, ~, ALE_velocity] = movemesh(MESH, Fluid_ReferenceNodes, Solid_Extension, TimeAdvanceS, uS, d_Fn, dim, dt, nLiter, ALE_velocity, Couple);
         else
-            [~, ~, ALE_velocity] = movemesh(MESH, Fluid_ReferenceNodes, Solid_Extension, TimeAdvanceS, uS, d_Fn, dim, dt, nLiter);
+             [MESH, d_Fn_t, ALE_velocity] = movemesh(MESH, Fluid_ReferenceNodes, Solid_Extension, TimeAdvanceS, uS, d_Fn, dim, dt, nLiter, ALE_velocity, Couple);
         end
         
         % solve the Navier-Stokes equations (whatever formulation)
-        [uF, C_NS, F_NS, trac] =  solve_fluid(MESH, DATA, FE_SPACE_v, FE_SPACE_p, TimeAdvanceF, TimeAdvanceS, t, dt, ALE_velocity, uS);
+        [uF, C_NS, F_NS, trac] =  solve_fluid(MESH, DATA, FE_SPACE_v, FE_SPACE_p, TimeAdvanceF, TimeAdvanceS, t, dt, ALE_velocity, uS, Couple, nLiter);
         
         % solve the solid elasticity equations (whatever formulation/constitutive model)
         [uS_t] = solve_solid(FE_SPACE_s, FE_SPACE_v, MESH, DATA, SolidModel, TimeAdvanceS, uS_n, t, Coef_Mass, M_s, A_robin, trac);   

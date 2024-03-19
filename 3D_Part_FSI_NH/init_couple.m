@@ -11,12 +11,14 @@ Couple.probeOutFreq = 1;            %| physical variable output frequency
 Couple.out = 1;                     %| output frequency for coupling data
 
 % Convergence acceleration parameters
-algorithm = 'AndersonAcceleration';
+algorithm = 'genbroyden';
 Couple.omegaMax = 0.75; %0.1        %| relaxation factor
-Couple.reuse = 10;                   %| time-steps to reuse
+Couple.reuse = 8;                   %| time-steps to reuse
 Couple.small = 1e-10;               
 Couple.filter = 2;                  %| QR1 = 1; NM = 2; POD =3
 Couple.count = 0;                   %| filtered columns
+Couple.extra = 2;                   %| Const = 1; Linear = 2; Legacy =3; Quadratic =4; Cubic =5;
+Couple.lindepen = 1e-5;     		%| filtering threshold
 
 %% Initialize fixed-point iteration variables and data output files
 r = zeros(length(uS),1);              % initial displacement residual 
@@ -67,7 +69,6 @@ switch lower(algorithm)
         model = GB(Couple.small, Couple.reuse, Couple.count); %GB3
     case 'andersonacceleration'
         Acc_flag = 7;
-        Couple.lindepen = 1e-4;     %| filtering threshold
         model = AA(Couple.lindepen, Couple.reuse, Couple.filter, Couple.count);
     case 'mvls'
         Acc_flag = 8;
@@ -82,6 +83,6 @@ switch lower(algorithm)
 end
 
 %% Additional functional tools (step's inital variable approx. / convergence criteria)
-extrapolator = Extrapolator(zeros(length(MESH.Solid.Gamma_global),1));
+extrapolator = Extrapolator(zeros(length(MESH.Solid.Gamma_global),1), Couple.extra);
 convergence = Convergence(Couple.rtol,Couple.imin,Couple.imax,Couple.maxSteps,Couple.small,Couple.out, Acc_flag);
 objects = {convergence,extrapolator,model};

@@ -3,8 +3,10 @@ classdef Convergence < handle
     properties (SetAccess=private)
         reso = 0.0;   
         resk = 0.0;
+		resD = 0.0;
         resV = 0.0;
         resP = 0.0;
+		resT = 0.0;		
         k = 0;
         k_tot = 0;
         n = 0;
@@ -34,25 +36,27 @@ classdef Convergence < handle
             C.flag = flag;
             
             if (C.output)
-                C.file = fopen('Results/Disp_Residual.txt','w');   %| create residual output file if desired
+                C.file = fopen('Results/Residual_Errors.txt','w');   %| create residual output file if desired
             end            
         end
  
  %% Add/Update info about current FP residual data      
-        function add(C,r,rV,rP)   
+        function add(C,r,rD,rV,rP,rT)   
             C.k = C.k + 1;                 %| update coupling iteration number             
             C.k_tot = C.k_tot + 1;         %| collect coupling iteration count
             C.resk = norm(r);              %| collect current coupling iteration residual norm
-            C.resV = norm(rV); 
-            C.resP = norm(rP); 
-            
+            C.resD = norm(rD);			   %| interface displacement resdiual norm
+			C.resV = norm(rV); 			   %| interface velocity resdiual norm
+            C.resP = norm(rP); 			   %| interface pressure resdiual norm
+            C.resT = norm(rT); 			   %| interface traction resdiual norm
+			
             if (C.k == 1)
                 C.reso = C.resk;           %| initial FP iteration residual norm
             end
             
             if (C.output)
-                    format = '%4i %4i %11.4e %11.4e %11.4e \n';    %| data format         
-                    data = [C.n C.k C.resk C.resV C.resP];         %| time-step, coupling iteration, residual 
+                    format = '%4i %4i %11.4e %11.4e %11.4e %11.4e %11.4e \n';    %| data format         
+                    data = [C.n C.k C.resk C.resD C.resV C.resP C.resT];         %| time-step, coupling iteration, residual 
                     fprintf(C.file,format,data);     %| write results to file
                     fprintf(format,data);            %| print results to command line 
             end

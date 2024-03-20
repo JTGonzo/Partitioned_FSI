@@ -62,7 +62,6 @@ for i = 1:length(dofs_drag)
     end
 end
 
-
 % lift and drag output file
 fileDragLift = fopen(DATA.Fluid.Output.DragLift.filename, 'w+');
 fprintf(fileDragLift, '%1.4e  %1.4e  %1.4e  %1.4e', t, Fx(k_t+1), Fy(k_t+1), Fz(k_t+1));
@@ -70,6 +69,7 @@ fprintf(fileDragLift, '%1.4e  %1.4e  %1.4e  %1.4e', t, Fx(k_t+1), Fy(k_t+1), Fz(
 %% initialize algebraic Navier-Stokes LHS & RHS matricices/vector spaces
 C_NS = 0*sparse(FE_SPACE_v.numDof + FE_SPACE_p.numDof, FE_SPACE_v.numDof + FE_SPACE_p.numDof);
 F_NS = 0*sparse(FE_SPACE_v.numDof + FE_SPACE_p.numDof, 1);
+trac = zeros(size(F_NS));
 
 %% Initialize the ALE mes solution space
 ALE_velocity = zeros(MESH.Fluid.numNodes*dim, 1);

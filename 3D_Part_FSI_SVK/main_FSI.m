@@ -68,6 +68,8 @@ while ( t < tf )
         end
         
         uF_l = uF;
+		trac_l = trac;
+		
         % solve the Navier-Stokes equations (whatever formulation)
         [uF, C_NS, F_NS, trac] =  solve_fluid(MESH, DATA, FE_SPACE_v, FE_SPACE_p, TimeAdvanceF, TimeAdvanceS, t, dt, ALE_velocity, uS, Couple, nLiter);
         
@@ -76,7 +78,8 @@ while ( t < tf )
         
         % compute the FP displacement solution residual
         r =  uS_t - uS;      
-        rF = uF_l - uF;                
+        rF = uF_l - uF;        
+		rT = trac_l - trac;        
         
         % Retain iteration residual data
         if ((Acc_flag >= 3) && (Acc_flag ~= 4))
@@ -88,7 +91,7 @@ while ( t < tf )
         end
         
         % Check convergence criteria
-        convergence.add(r,rF(MESH.Fluid.Gamma_global),rF(dim*MESH.Fluid.numNodes+p_dofs));
+        convergence.add(r,r(MESH.Solid.Gamma_global),rF(MESH.Fluid.Gamma_global),rF(dim*MESH.Fluid.numNodes+p_dofs),rT(MESH.Fluid.Gamma_global));
         if (convergence.is_satisfied())
             break;
         end                

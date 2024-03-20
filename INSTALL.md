@@ -21,14 +21,20 @@ Open Matlab and navigate to the root folder of the downloaded solver that you wi
 to compile the C-assembly routines and "mexify" some other files.
 
 
-Running the Example Provided 
+Running and Post-Processing the Example Provided 
 ------------------
 
 With Matlab opened; in the same folder as the *make.m* file ran previously, type 
 
 >> main_FSI
 
-doing this begins the example simulation, creates a "Figures" folder where the simulation configuration is output periodically as a series of *.vtk files, and finally creates a "Results" folder where the resultant aerodynamic forces (integrated over the defined FSI interface) are print to a file contained therein after each time step. 
+doing this begins the example simulation and creates a "Figures" folder where the simulation configuration is output periodically as a series of *.vtk* files. Additionaly, a "Results" folder is created where the code prints physical and coupling results at the end of each time step to a handful of output files. Namely; the resultant aerodynamic forces integrated over the defined FSI surface, the displacement and velocity results at the solid (Wid) and fluid (WidF) watchpoint nodes (user defined in *init_couple.m*), the required number of coupling iterations needed per time step, and the resdiual errors of the interfacial variables after each fixed-point iteration. 
+
+Some crude post processing tools are provided in the `Post Processing` folder which plots the evolution of the collected variables (force, displacement, velocity, residual errors, fixed-point iterations) over the course of the simulation. 
+
+Exploring Additional Examples Provided 
+------------------
+In the `Examples` folder 
 
 Running your own Simulation
 ------------------

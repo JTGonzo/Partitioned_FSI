@@ -8,7 +8,7 @@ If the reader is still compelled to experiment I encourgae them to do so, howeve
 
 For detailed configuartion, installion and operation instructions, in particular for the redbKIT based solvers, please follow the steps contained in the brief [INSTALL.md](INSTALL.md) file provided.
 
-# Strongly Coupled Partitioned FSI Solver
+## Strongly Coupled Partitioned FSI Solver
 
 <ins>***2D Rigid-Body FSI solver***</ins><br>
 This partitioned FSI scheme was developed at the [University of British Columbia](https://cml.mech.ubc.ca/) by the graduate students of my superviosor [Dr. Rajeev Jaiman](https://scholar.google.com/citations?user=iofAU68AAAAJ&hl=en&oi=ao). It uses stabilized streamline-upwind Petrov-Galerkin (SUPG) P<sub>m</sub>/P<sub>m-1</sub>/P<sub>m</sub> iso-parametric finite elements to satisfy the inf–sup condition of the fluid domain equations. The solid domain is simply modelled as an elastically mounted rigid cylinder that is free to translate along its two directional degrees of freedom. Temporal discretization is achieved via the generalized-&alpha; method for each set of domain equations.

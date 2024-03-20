@@ -1,9 +1,9 @@
-clear all; close all; clc; fclose('all');
+clear all; close all; clc;fclose('all'); 
 
 fontSize = 48;
 formatSpec = '%f';
 
-%% Load data
+%% Load data 
 addpath('../Results/')
 %fileID = fopen('AeroForces.txt','r');
 %fileID = fopen('Tube_Vel.othd','r');
@@ -54,5 +54,5 @@ plot(t(1:20:end), mag(1:20:end),'dk','MarkerSize',10,'LineWidth', 1);
 box off
 set(gca,'TickDir','out','FontSize',32);
 xlabel('$t$','Fontsize',fontSize,'Interpreter','Latex');
-ylabel('$||\hat{d}||$','Fontsize',fontSize,'Interpreter','Latex');
+ylabel('$||\textbf{u}^{s}||_2$','Fontsize',fontSize,'Interpreter','Latex');
 

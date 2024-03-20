@@ -1,6 +1,6 @@
 clear all; close all; clc; fclose('all');
 
-fontSize = 48;
+fontsize = 48;
 formatSpec = '%f';
 
 %% Load residual data
@@ -30,10 +30,10 @@ px2 = semilogy(ts1(ind2),rd1(ind2),'-r','LineWidth',2);
 px3 = semilogy(ts1(ind3),rd1(ind3),'-g','LineWidth',2);
 px4 = semilogy(ts1(ind4),rd1(ind4),'-m','LineWidth',2);
 px5 = semilogy(ts1(ind5),rd1(ind5),'-k','LineWidth',2);
-legend([px1 px2 px3 px4 px5],{'$iter_1$','$iter_2$','$iter_3$','$iter_4$','$iter_5$'},'Interpreter','Latex','Location','northwest','Fontsize',48)
+legend([px1 px2 px3 px4 px5],{'$iter_1$','$iter_2$','$iter_3$','$iter_4$','$iter_5$'},'Interpreter','Latex','Location','southwest','Fontsize',24)
 box off
-set(gca,'TickDir','out','fontsize',32, 'ylim',[1e-12 1]);
-xlabel('t','fontsize',fontsize,'Interpreter','Latex');
+set(gca,'TickDir','out','fontsize',32);
+xlabel('Time step','fontsize',fontsize,'Interpreter','Latex');
 ylabel('$||r_{u^s}||_2$','fontsize',fontsize,'Interpreter','Latex');
 
 
@@ -46,8 +46,8 @@ pt2 = semilogy(ts1(ind2),rt1(ind2),'-r','LineWidth',2);
 pt3 = semilogy(ts1(ind3),rt1(ind3),'-g','LineWidth',2);
 pt4 = semilogy(ts1(ind4),rt1(ind4),'-m','LineWidth',2);
 pt5 = semilogy(ts1(ind5),rt1(ind5),'-k','LineWidth',2);
-legend([pt1 pt2 pt3 pt4 pt5],{'$iter_1$','$iter_2$','$iter_3$','$iter_4$','$iter_5$'},'Interpreter','Latex','Location','northwest','Fontsize',48)
+legend([pt1 pt2 pt3 pt4 pt5],{'$iter_1$','$iter_2$','$iter_3$','$iter_4$','$iter_5$'},'Interpreter','Latex','Location','southwest','Fontsize',24)
 box off
-set(gca,'TickDir','out','fontsize',32, 'ylim',[1e-12 1]);
-xlabel('t','fontsize',fontsize,'Interpreter','Latex');
-ylabel('$||r_{t^f}||$','Fontsize',fontSize,'Interpreter','Latex');
+set(gca,'TickDir','out','fontsize',32);
+xlabel('Time step','fontsize',fontsize,'Interpreter','Latex');
+ylabel('$||r_{t^f}||$','Fontsize',fontsize,'Interpreter','Latex');

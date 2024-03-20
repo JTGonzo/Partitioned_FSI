@@ -18,5 +18,5 @@ grid on
 hold on
 box off
 set(gca,'TickDir','out','fontsize',32)
-xlabel('t','fontsize',fontsize,'Interpreter','Latex');
-ylabel('Iterations','fontsize',fontsize,'Interpreter','Latex');
+xlabel('Time step','fontsize',fontsize,'Interpreter','Latex');
+ylabel('\# Iterations','fontsize',fontsize,'Interpreter','Latex');

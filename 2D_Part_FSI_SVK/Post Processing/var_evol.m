@@ -18,7 +18,7 @@ figure(1)
 plot(t, dx,'-r','LineWidth',3);
 hold on
 grid off
-plot(t(1:20:end), dx(1:20:end),'+r','MarkerSize',10,'LineWidth', 1);
+plot(t(1:100:end), dx(1:100:end),'+r','MarkerSize',10,'LineWidth', 1);
 box off
 set(gca,'TickDir','out','FontSize',32);
 xlabel('$t$','Fontsize',fontSize,'Interpreter','Latex');
@@ -28,7 +28,7 @@ figure(2)
 plot(t, dy,'-b','LineWidth',3);
 hold on
 grid off
-plot(t(1:20:end), dy(1:20:end),'*b','MarkerSize',10,'LineWidth', 1);
+plot(t(1:100:end), dy(1:100:end),'*b','MarkerSize',10,'LineWidth', 1);
 box off
 set(gca,'TickDir','out','FontSize',32);
 xlabel('$t$','Fontsize',fontSize,'Interpreter','Latex');
@@ -38,9 +38,9 @@ figure(3)
 plot(t, mag,'-k','LineWidth',3);
 hold on
 grid off
-plot(t(1:20:end), mag(1:20:end),'dk','MarkerSize',10,'LineWidth', 1);
+plot(t(1:100:end), mag(1:100:end),'dk','MarkerSize',10,'LineWidth', 1);
 box off
 set(gca,'TickDir','out','FontSize',32);
 xlabel('$t$','Fontsize',fontSize,'Interpreter','Latex');
-ylabel('$||\hat{d}||$','Fontsize',fontSize,'Interpreter','Latex');
+ylabel('$||\textbf{u}^{s}||_2$','Fontsize',fontSize,'Interpreter','Latex');
 

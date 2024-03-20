@@ -36,7 +36,7 @@ Additional Example Simulations Provided
 ------------------
 For each of the solvers there are additional example simulations provided that were used to validate the code against well established benchmarks found in the literature. To run these files the user just needs to replace the ***CFD_data.m, CSM_data.m, and .mat*** files currently in the root folder with the corresponding files found in the respective `Examples/*` folder.
 
-Next, the user just has to update the `init_data.m` file as described below to instruct the solver which .mat files to import and what names to give to the output files. These new names given to the output files also naturally requires editting to the port processing files when the time comes to import the new results. 
+Next, the user just has to update the `init_data.m` file as described below to instruct the solver which .mat files to import and what names to give to the output files. These new names given to the output files also naturally requires editting the post processing files when the time comes to import the new results. 
 
 Running your own Simulation
 ------------------
@@ -102,4 +102,4 @@ Open Matlab and navigate to the root folder of the downloaded solver then type
 
 doing this begins the example simulation provided. 
 
-The simulation configuration is output periodically as a series of *.plt* file,s and the displacement and interface aerodynamic force results experienced by the rigid body are printed to a local *.oisd* file in the folder. 
+The simulation configuration is output periodically as a series of *.plt* files, and the displacement and interface aerodynamic force results experienced by the rigid body are printed to a local *.oisd* file in the folder. 

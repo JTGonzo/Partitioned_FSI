@@ -32,7 +32,7 @@ doing this begins the example simulation and creates a "Figures" folder where th
 
 Some basic post processing tools are also provided in the `Post Processing` folder which plots the evolution of the collected variables (force, displacement, velocity, residual errors, fixed-point iterations) over the course of the performed simulation. 
 
-Exploring Additional Examples Provided 
+Additional Example Simulations Provided 
 ------------------
 For each of the solvers there are additional example simulations provided that were used to validate the code against well established benchmarks found in the literature. To run these files the user just needs to replace the ***CFD_data.m, CSM_data.m, and .mat*** files currently in the root folder with the corresponding files found in the respective `Examples/*` folder.
 

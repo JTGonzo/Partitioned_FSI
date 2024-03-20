@@ -39,8 +39,18 @@ classdef GB < handle
                 
                 % basic info filtering
                 [M.V, M.W, M.T, ~, ~, ~, ~, ~,M.count] = filt_QR1(M.V, M.W, M.T, M.Vprev, M.Wprev, M.Tprev, M.small,M.count);
-                                 
-                if M.n >= 1
+                 
+                if M.n > 1                    
+% How to properly take the psuedo inverse of M.V??                      
+%                     num = M.W - M.Jhat_prev*M.V;
+%                     Jup = num*inv(den)*M.V';        
+%                     Jup = num/den*M.V';
+%                     Jup = num*pinv(den+reg)*M.V'; 
+
+%                     [Q,R] = qr(M.V,0);
+%                     for i = 1:length(Q(1,:))
+%                         Z(i) = R\Q(:,1)';
+%                     end  
                     den = M.V'*M.V;
                     Z = LUinverse(den)*M.V';  
                     Jup = (M.W - M.Jhat_prev*M.V)*Z;
@@ -48,7 +58,7 @@ classdef GB < handle
                 end              
             end            
             M.r = r;                     %| past residual update
-            M.xt = xt;                   %| past intermediary  solutio             
+            M.xt = xt;                   %| past intermediary  solutio            
         end
             
 %% Secant Jacobian computation        
@@ -73,7 +83,7 @@ classdef GB < handle
 
 %% Function maintenance and monitoring
          function clear(M)
-            if M.n == 2 %4
+            if M.n == 2
                 temp = M.V'*M.V; 
                 Z = LUinverse(temp)*M.V';            
                 M.Jhat = M.W*Z;           

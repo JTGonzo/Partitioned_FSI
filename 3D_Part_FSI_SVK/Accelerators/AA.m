@@ -48,7 +48,7 @@ classdef AA < handle
             %% Filter the retained information
             if M.filter == 1             %| QR1 -Filter
                 [M.V, M.W, M.T, M.Vprev, M.Wprev, M.Tprev, Q, R, M.count] = filt_QR1(M.V, M.W, M.T, M.Vprev, M.Wprev, M.Tprev, M.small,M.count);
-            elseif M.filter == 2         %| NM -Filter
+            elseif M.filter == 2         %| QR2 -Filter
                 vt = [M.V M.Vprev];
                 if length(vt(1,:))>= 2
                     [M.V, M.W, M.T, M.Vprev, M.Wprev, M.Tprev, Q, R, M.count] = filt_NM(M.V, M.W, M.T, M.Vprev, M.Wprev, M.Tprev, M.small,M.count);                   

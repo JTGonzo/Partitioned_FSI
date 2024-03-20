@@ -48,16 +48,10 @@ classdef MVLS < handle
             end
             
             %% Current time-steps secant contributions        
-            if ((~isempty(M.V))||(M.n<=4)) 
+            if (~isempty(M.V)) 
                 % simple filter to avoid almost linear-dependence 
-                vt = [M.V M.Dummy];
-                if length(vt(1,:))>= 2
-                    smaller = 1e-4;
-                    [M.V, M.W, M.T, ~, ~, ~, Q, R, M.count] = filt_NM(M.V, M.W, M.T, M.Dummy, M.Dummy, M.Dummy, smaller, M.count);                   
-                else                     
-                    vt = [M.V M.Dummy]; 
-                    [Q,R] = qr(vt,0);
-                end
+                [M.V, M.W, M.T, ~, ~, ~, Q, R,M.count] = filt_QR1(M.V, M.W, M.T, M.Dummy, M.Dummy, M.Dummy, M.small,M.count); 
+               
                 b = Q'*r;
                 c = R\b;               %| least-squares weights 
                 dx = M.W*c;            %| approx. inverse Jacobian
@@ -67,29 +61,22 @@ classdef MVLS < handle
             end
             
             %% Incorporate recursive Jacobian contributions
-            if M.n > 4
+            if length(M.Wprev)>= 1             
+                i = 0;
                 if M.n-1 <= M.limit
                     kn = M.n-1;
                 else
                     kn = M.limit;
                 end
-                
-                if M.n < 20                                       
-                      qq = M.Qprev{kn};
-                      b = qq'*r;
-                      c = M.Rprev{kn}\b;        %| past step leas-squares weights 
-                      dx = dx + M.Wprev{kn}*c;  %| past time step contributions 
-                else
-                    i = 0;
-                    while ((norm(r)>M.small) && (i<min(M.limit,length(M.Wprev))))
-                        qq = M.Qprev{kn};
-                        b = qq'*r;
-                        c = M.Rprev{kn}\b;        %| past step leas-squares weights 
-                        dx = dx + M.Wprev{kn}*c;  %| past time step contributions                
-                        r = r - qq*b;             %| remove accounted residual info
-                        kn = kn - 1;
-                        i = i + 1;
-                    end
+
+                while ((norm(r)>M.small) && (i<min(M.limit,length(M.Wprev))))
+                    qq = M.Qprev{kn};
+                    b = qq'*r;
+                    c = M.Rprev{kn}\b;        %| past step leas-squares weights 
+                    dx = dx + M.Wprev{kn}*c;  %| past time step contributions                
+                    r = r - qq*b;             %| remove accounted residual info
+                    kn = kn - 1;
+                    i = i + 1;
                 end
             end
         end
@@ -143,11 +130,7 @@ classdef MVLS < handle
         end
        
         function LS = ready(M)
-            if M.n > 4
-                LS =~isempty([M.V M.Wprev]); %| data must be available for Jacobian approx. 
-            else
-                LS =~isempty(M.V);
-            end
+            LS =~isempty([M.V M.Wprev]); %| data must be available for Jacobian approx. 
         end
     end
 end

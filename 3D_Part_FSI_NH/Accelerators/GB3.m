@@ -37,17 +37,21 @@ classdef GB3 < handle
                 M.V = [r - M.r M.V];     %| Update residual difference matrix
                 M.W = [xt - M.xt M.W];   %| Update solution difference matrix
                 M.T = [M.n M.T];         %| Update info time identifier 
-
+                
                 % basic info filtering
-               [M.V, M.W, M.T, ~, ~, ~, ~, ~,M.count] = filt_QR1(M.V, M.W, M.T, M.Vprev, M.Wprev, M.Tprev, M.small,M.count);                 
-                              
-                if M.n > 1                          
+                [M.V, M.W, M.T, ~, ~, ~, ~, ~,M.count] = filt_QR1(M.V, M.W, M.T, M.Vprev, M.Wprev, M.Tprev, M.small,M.count);                 
+
+%                 [Q,R] = qr(M.V,0);
+%                 for i = 1:length(Q(1,:))
+%                     Z(i) = R\Q(:,1)';
+%                 end
+                if M.n > 1
                     temp = M.V'*M.V; 
                     Z = LUinverse(temp)*M.V';  
 
                     M.Z = Z;
                     M.B = (M.W - M.Jhat_prev*M.V);
-                end                               
+                end                              
             end            
             M.r = r;                     %| past residual update
             M.xt = xt;                   %| past intermediary  solutio            
@@ -88,6 +92,10 @@ classdef GB3 < handle
            end
             
            if M.n > 2  
+%                 [Q,R] = qr(M.V,0);
+%                 for i = 1:length(Q(1,:))
+%                     Z(i) = R\Q(:,1)';
+%                  end   
                  temp = M.V'*M.V; 
                  Z = LUinverse(temp)*M.V';  
                  Jup = (M.W - M.Jhat_prev*M.V)*Z;

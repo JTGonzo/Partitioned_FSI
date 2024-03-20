@@ -3,13 +3,13 @@
 [~,~,~] = mkdir('Results');
 
 wrkDir = './' ;
-problemString = 'Flap'; %'Turek' ; 
+problemString = 'Tube'; %'Turek'; % 'Flap'% 
 addpath('C_Files/')
 addpath('Mappers/')
 addpath('Accelerators/')
 addpath('Accelerators/Filters/')
 addpath('import_export_time/')
-vtk_filename = 'Figures/Flap_'; % [];% 'Figures/Tube_'; 'Figures/Haub_';
+vtk_filename = 'Figures/Tube_'; % [];% 'Figures/Flap_';% 'Figures/Haub_'; %
 
 t = [];
 param = [];
@@ -18,14 +18,14 @@ MESH.dim  = dim; % problem dimensionality
 
 %% Load problem mesh and element properties
 % Solid mesh
-load('Tube_S_finer.mat') %'Tube_S.mat' 'Haub_S.mat'
+load('Tube_S.mat') %'Flap_S.mat' 'Haub_S.mat'
 meshSolid.boundaries = boundaries;
 meshSolid.elements = elements;
 meshSolid.vertices = vertices;
 meshSolid.rings = rings;
 
 % Fluid mesh
-load('Tube_F_finer.mat') ; %'Tube_F.mat' 'Haub_F.mat'
+load('Tube_F.mat') ; %'Flap_F.mat' 'Haub_F.mat'
 meshFluid.boundaries = boundaries; 
 meshFluid.elements = elements;
 meshFluid.vertices = vertices;

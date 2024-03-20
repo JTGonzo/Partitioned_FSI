@@ -3,45 +3,68 @@ These codes were very recently uploaded (March 20th, 2024) from my system and ha
 
 If the reader is still compelled to experiment I encourgae them to do so, however, `while this disclaimer is being displayed` I suggest that one exercises ***reasonable*** caution when using the partitoned solvers provided.
 
-# Strongly Coupled Partitioned FSI Solver
-<ins>***2D & 3D redbKIT-based solvers***</ins><br>
-This repository contains 2D and 3D high-fidelity computational fluid-structure interaction solvers built (mainly) in MATLAB. They are primarily focused on solving two-field problems in a partitioned fashion, where the incompressible Navier-Stokes equations - written in the Arbitrary Lagrangian Eulerian (ALE) form - are coupled with the nonlinear elastodynamics structural equations. For 2D FSI problems the user has the option to choose either a linear elastic constitutive material model for the structural mechanics solver (**2D_Part_FSI_LE**) or a nonlinear St. Venant Kirchhoff material model (**2D_Part_FSI_SVK**). For 3D FSI problems, the user can additionally choose a nearly-incompressible NeoHookean constitutive material model for the structural mechanics solver (**3D_Part_FSI_NH**). 
-
-These solvers use a Galerkin least-squares finite element strategy to spatial discretize both the fluid and structural equations. In these solvers we exclusively use higher-order P<sub>2</sub> finite elements for the structural equations and stable Taylor-Hood P<sub>2</sub>/P<sub>1</sub> mixed finite elements for the fluid equations. A second-order backward difference scheme is adopted for the temporal discretization of the fluid domian whilst the generalized-&alpha; method is used for the structural domian. 
-
-In all cases except the 2D rigid-body solver each code wwas developed through  
- 
- was largely built starting from the redbkit monolithic FSI code which was
-% deconstructed to its baseline elements, reassembled and added to (as needed), and used 
-% to solve specific FSI benchmarks in a Partitioned fashion for subsequent coupling analysis
-
-The redbKIT-based solvers presented above are bare-bones deconstructions (/simplifications) of the original [redbKIT](https://github.com/redbKIT/redbKIT).
-
-
-As described in detail below; while the [**redbKIT**](https://github.com/redbKIT/redbKIT) toolkit should be the primary reference point for the interested reader, it is my belief that the condensed monolithic solvers (as presented here in their simplified intermediary forms) hold their own unique value to the wider student/researcher community. In particular, for the purposes of streamlined learning, efficient tool adoption, and additional/alternative technique development. 
-
-
-
-<ins>***2D Rigid-Body FSI solver***</ins><br>
-The partitioned FSI scheme was developed at the [University of British Columbia](https://cml.mech.ubc.ca/) by the graduate students of my superviosor [Dr. Rajeev Jaiman](https://scholar.google.com/citations?user=iofAU68AAAAJ&hl=en&oi=ao). This technique uses a finite-element spatial discretization for both the fluid and structural equations. It uses stabilized streamline-upwind Petrov-Galerkin (SUPG) P<sub>m</sub>/P<sub>m-1</sub>/P<sub>m</sub> iso-parametric finite elements to satisfy the inf–sup condition. Temporal discretization is achieved via the second-order bacward difference formula in each domain. In this solver class (2D & 3D) we exclusive use a **St. Venant Kirchhoff** constitutive material model in the nonlinear elastodynamics equations. 
-
-Further reading on this approach can be found in 
->[**[RKJ16] J. Liu, R. Jaiman, P. Gurugubelli. A stable second-order scheme for fluid–structure interaction with strong added-mass effects **, Journal of Computational Physics, 2014.](https://doi.org/10.1016/j.jcp.2014.04.020)
-
-
-
 ## Download, Installation and Running
 -------
 
 For detailed configuartion, installion and operation instructions, in particular for the redbKIT based solvers, please follow the steps contained in the brief [INSTALL.md](INSTALL.md) file provided.
 
+# Strongly Coupled Partitioned FSI Solver
+
+<ins>***2D Rigid-Body FSI solver***</ins><br>
+This partitioned FSI scheme was developed at the [University of British Columbia](https://cml.mech.ubc.ca/) by the graduate students of my superviosor [Dr. Rajeev Jaiman](https://scholar.google.com/citations?user=iofAU68AAAAJ&hl=en&oi=ao). It uses stabilized streamline-upwind Petrov-Galerkin (SUPG) P<sub>m</sub>/P<sub>m-1</sub>/P<sub>m</sub> iso-parametric finite elements to satisfy the inf–sup condition of the fluid domain equations. The solid domain is simply modelled as an elastically mounted rigid cylinder that is free to translate along its two directional degrees of freedom. Temporal discretization is achieved via the generalized-&alpha; method for each set of domain equations.
+
+Further reading on this approach can be found in 
+>[**[RKJ17] L. Zhong, W. Yao, K. Yag, R. Jaiman, B. C. Khoo,. On the vortex-induced oscillations of a freely vibrating cylinder in the vicinity of a stationary plane wall **, Journal of Fluids and Structures, 2016.](https://doi.org/10.1016/j.jfluidstructs.2016.07.001)
+
+<ins>***2D & 3D redbKIT-based solvers***</ins><br>
+This repository contains 2D and 3D high-fidelity computational fluid-structure interaction solvers built (mainly) in MATLAB. They are primarily focused on solving two-field problems in a partitioned fashion, where the incompressible Navier-Stokes equations - written in the Arbitrary Lagrangian Eulerian (ALE) form - are coupled with the nonlinear elastodynamics structural equations. For 2D FSI problems the user has the option to choose either a linear elastic constitutive material model for the structural mechanics solver (**2D_Part_FSI_LE**) or a nonlinear St. Venant Kirchhoff material model (**2D_Part_FSI_SVK**). For 3D FSI problems, the user can additionally choose a nearly-incompressible NeoHookean constitutive material model for the structural mechanics solver (**3D_Part_FSI_NH**). 
+
+These solvers all use a Galerkin least-squares finite element strategy for each set of domain specific equations. Here we exclusively use higher-order P<sub>2</sub> finite elements for the structural equations and stable Taylor-Hood P<sub>2</sub>/P<sub>1</sub> mixed finite elements for the fluid equations. A second-order backward difference scheme is adopted for the temporal discretization of the fluid domian whilst the generalized-&alpha; method is used for the structural domian. 
+
+In all cases (except for the 2D rigid-body solver) each code was derived from a corresponding [redbKIT monolithic FSI](https://github.com/JTGonzo/Monolithic_FSI) solver. These solvers were decomposed into their baseline elements and were then strategically reassembled and further built upon such that we finally ended up with a partitioned numerical framework. These partitoned solvers (given above) served as a robust testbed for my subsequent investigation of ["*coupling  instability in low mass-ratio partitioned FSI simulations*"](https://jtgonzo.github.io/). From this effort algorithmic solutions to stabilize and accelerate the fixed point coupling procedure comensurate with the partitioned approach [were recommended](https://github.com/JTGonzo/Multi-Threaded_Partitioned_FSI).  
+
+Features unique to the partitioned strategy that have been included in each of the solvers provided include:<br>
+* Coupling Methods:
+  - Anderson Acceleration
+  - Generalized Broyden
+  - Broyden's Second Method
+  - Multi-Vector Least Square 
+  - Dynamic Aitken Relaxation 
+  - Constant Relaxation 
+  - Pure Gauss-Seidel Iterations
+
+* Filtering Strategies:
+  - QR1 filtering
+  - QR2 (Classic Gram-Schmidt) filtering
+  - QR2 (Modified Gram-Schmidt) filtering
+  - QR2 (Householder Reflections) filtering
+  - POD filtering
+
+* Interface Mapping Techniques:
+  - Nearest Neighbour Interpolation
+  - Projection and Linear Interpolation
+  - Radial Basis Function Interpolation
+
+* Extrapolation Methods:
+  - Constant
+  - Linear 
+  - Quadratic
+  - Cubic
+
+* [Work in Progress Tools](https://github.com/JTGonzo/Multi-Threaded_Partitioned_FSI):
+  - Interface tracking 
+  - Adaptive Regularization Least Squares
+  - Selective Secant Inclusion
+  - Truncated SVD filtering
+
 ## Further Clarifying Details
-For absolute clarity, the [**redbKIT**](https://github.com/redbKIT/redbKIT) toolkit by itself is an ***AMAZING*** resource for (young) academics seeking an education on the finite element method and reduced-order modelling. As such I **strongly** recommend the reader fork that repository and work through redbKIT's numerous well crafted example problems. *I personally give this resource the lion's share of credit in helping me complete my graduate studies.*
+For absolute clarity, the [**redbKIT**](https://github.com/redbKIT/redbKIT) toolkit by itself is an ***AMAZING*** resource for (young) academics seeking an education in the finite element method and reduced-order modelling. As such I **strongly** recommend the reader fork that repository and work through redbKIT's numerous well crafted example problems. *I personally give this resource the lion's share of credit in helping me complete my graduate studies.*
 
-Having said that, however, as is true for (almost) all **well developed / robust** software packages used to tackle complex problems in computational physics; its sophistication tends to be its own undoing for those novice students beginning their journey in the simulation sciences or those young numerical methods researchers who are focusing on a niche element of the problem/framework/technique and just want the machinery around the issue to be (first) working and (secondly) easily digestible for peace of mind, debugging, development etc. purposes. As such, the codes provided above seek to shallow the learning curve and expedite the toolkit's adoption/integration. 
+These solevrs, however, are of a monolthic construction thus for the system of equations to be well-posed. If the interested reader is more interested in the details of partitioned coupling or would like to develop one of the respective domain solvers without having to consider teh numerical details of teh other domain they may find the tools found in this repository more useful.
 
-In the case of my graduate studies, for example, having simplified the redbKIT solvers into just those most essential numerical elements needed for running a reasonably complex fluid-structure interaction simulation, I was **then** able to more easily/quickly deconstruct the monolthic system of equations into a partitioned framework for solving FSI problem. From this point I built out all the supporting tools needed to perform [partitioned simulations](https://github.com/JTGonzo/Partitioned_FSI) (interface mapping, iterative acceleration etc.) and then was able to **BEGIN** my research into ["*stabilization strategies for low mass-ratio partitioned FSI simulations*"](https://jtgonzo.github.io/).  
-
+Lasttly, for those readers seeking a more digestible version of the rebKIT-based monolthic FSI solvers as well as individual (rebKIT-based)domain-specific solvers please refernce the following repositories: 
+  1. [Monolithic Fluid Structure Interaction solvers](https://github.com/JTGonzo/Monolithic_FSI)
+  2. [Single Domain (CFD & CSM) solvers](https://github.com/JTGonzo/Single_Physics_Solvers)
 
 ## redbKIT : a MATLAB(R) library for reduced-order modeling of parametrized PDEs
 

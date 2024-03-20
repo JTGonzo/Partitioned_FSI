@@ -61,7 +61,7 @@ data.flag_dirichletNormal = [];
 data.Young   = 3*10^5;
 data.Poisson = 0.3;
 data.Density = 1200;
-data.Material_Model   = 'NeoHookean';
+data.Material_Model   = 'Linear';
 data.model   = 'CSM';
 
 data.ElasticCoefRobin = 1e+6;
